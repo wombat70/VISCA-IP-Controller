@@ -7,7 +7,7 @@ import socket
 import binascii # for printing the messages we send, not really necessary
 from time import sleep
 
-camera_ip = '192.168.0.100'
+camera_ip = '192.168.88.52'
 #camera_ip = '127.0.0.1'
 camera_port = 52381
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # IPv4, UDP
@@ -79,6 +79,35 @@ focus_direct = '81 01 04 48 0p 0q 0r 0s FF' #.replace('p', ) q, r, s
 focus_auto = '81 01 04 38 02 FF'
 focus_manual = '81 01 04 38 03 FF'
 focus_infinity = '81 01 04 18 02 FF'
+
+# Tom stuff:
+color_gain_master = '81 01 04 49 00 00 0p 0q ff'
+
+def set_color_gain(channel='master', gain='0'):
+    # p: 0,1,2,3,4,5,6 --> master, magenta, red, yellow, green, cyan, blue
+    # q: gain - 4 is centre (reset), range 0-e, which we will map to gain -4 to +10
+    channel_map = {
+        'master': 0,
+        'magenta': 1,
+        'red': 2,
+        'yellow': 3,
+        'green': 4,
+        'cyan': 5,
+        'blue': 6
+    }
+
+    if channel not in channel_map.keys():
+        return
+    p = str(channel_map[channel])
+    q_int = 4 + int(gain)
+    if q_int < 0 or q_int > 0xe:
+        return
+    q = format(q_int, 'x')
+
+    message_string = color_gain_master.replace('p', p).replace('q', q)
+    message = send_message(message_string)
+    return message
+
 
 def memory_recall_function(memory_number):
     send_message(information_display_off) # otherwise we see a message on the camera output
@@ -188,6 +217,11 @@ zoom_color = 'light blue'
 focus_color = 'cyan'
 on_off_color = 'violet'
 
+color_gain_color = 'cyan'
+color_gain_column = 8
+color_gain_row = 5
+color_gain_slider_width = 25
+
 # Preset store buttons
 Label(root, text='Store', bg=store_color).grid(row=1, column=store_column)
 Button(root, text=0, width=3, bg=store_color, command=lambda: memory_set_function(0)).grid(row=2, column=store_column)
@@ -292,5 +326,9 @@ Button(root, text='Info Off', bg=on_off_color, width=button_width, command=lambd
 #Label(root, text=camera_ip+':'+str(camera_port)).grid(row=6, column=0, columnspan=3)
 # Connection Label
 #Label(root, textvariable=display_message).grid(row=6, column=4, columnspan=3)
+
+# Color gains
+Label(root, text='Color Gain', bg=color_gain_color, width=color_gain_slider_width).grid(row=color_gain_row, column=color_gain_column)
+Scale(root, from_=-3, to=10, length=200, orient='horizontal', command=lambda value: set_color_gain('master', value)).grid(row=color_gain_row+1, column=color_gain_column)
 
 root.mainloop()
