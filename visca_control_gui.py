@@ -218,7 +218,7 @@ focus_color = 'cyan'
 on_off_color = 'violet'
 
 color_gain_color = 'cyan'
-color_gain_column = 8
+color_gain_column = 9
 color_gain_row = 5
 color_gain_slider_width = 25
 
@@ -327,8 +327,27 @@ Button(root, text='Info Off', bg=on_off_color, width=button_width, command=lambd
 # Connection Label
 #Label(root, textvariable=display_message).grid(row=6, column=4, columnspan=3)
 
-# Color gains
+# Color gains - master, magenta, red, yellow, green, cyan, blue
 Label(root, text='Color Gain', bg=color_gain_color, width=color_gain_slider_width).grid(row=color_gain_row, column=color_gain_column)
-Scale(root, from_=-3, to=10, length=200, orient='horizontal', command=lambda value: set_color_gain('master', value)).grid(row=color_gain_row+1, column=color_gain_column)
-
+_this_row = color_gain_row + 1
+Label(root, text='master').grid(row=_this_row, column=color_gain_column-1)
+Scale(root, from_=-3, to=10, length=200, orient='horizontal', command=lambda value: set_color_gain('master', value)).grid(row=_this_row, column=color_gain_column)
+_this_row = _this_row + 1
+Label(root, text='magenta').grid(row=_this_row, column=color_gain_column-1)
+Scale(root, from_=-3, to=10, length=200, orient='horizontal', command=lambda value: set_color_gain('magenta', value)).grid(row=_this_row, column=color_gain_column)
+_this_row = _this_row + 1
+Label(root, text='red').grid(row=_this_row, column=color_gain_column-1)
+Scale(root, from_=-3, to=10, length=200, orient='horizontal', command=lambda value: set_color_gain('red', value)).grid(row=_this_row, column=color_gain_column)
+_this_row = _this_row + 1
+Label(root, text='yellow').grid(row=_this_row, column=color_gain_column-1)
+Scale(root, from_=-3, to=10, length=200, orient='horizontal', command=lambda value: set_color_gain('yellow', value)).grid(row=_this_row, column=color_gain_column)
+_this_row = _this_row + 1
+Label(root, text='green').grid(row=_this_row, column=color_gain_column-1)
+Scale(root, from_=-3, to=10, length=200, orient='horizontal', command=lambda value: set_color_gain('green', value)).grid(row=_this_row, column=color_gain_column)
+_this_row = _this_row + 1
+Label(root, text='cyan').grid(row=_this_row, column=color_gain_column-1)
+Scale(root, from_=-3, to=10, length=200, orient='horizontal', command=lambda value: set_color_gain('cyan', value)).grid(row=_this_row, column=color_gain_column)
+_this_row = _this_row + 1
+Label(root, text='blue').grid(row=_this_row, column=color_gain_column-1)
+Scale(root, from_=-3, to=10, length=200, orient='horizontal', command=lambda value: set_color_gain('blue', value)).grid(row=_this_row, column=color_gain_column)
 root.mainloop()
